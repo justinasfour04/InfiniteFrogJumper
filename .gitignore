@@ -9,6 +9,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/[Pp]rojectSettings/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -58,3 +59,48 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+**/.DS_Store
+**/.git
+**/.gitmodules
+**/*.3ds
+**/*.3DS
+**/*.anim
+**/*.asset
+**/*.booproj
+**/*.controller
+**/*.cubemap
+**/*.dll
+**/*.dwlt
+**/*.exe
+**/*.fbx
+**/*.FBX
+**/*.flare
+**/*.gif
+**/*.ico
+**/*.jpeg
+**/*.jpg
+**/*.lxo
+**/*.LXO
+**/*.ma
+**/*.MA
+**/*.mat
+**/*.meta
+**/*.mid
+**/*.midi
+**/*.obj
+**/*.OBJ
+**/*.pdf
+**/*.pidb
+**/*.png
+**/*.prefab
+**/*.psd
+**/*.settings
+**/*.suo
+**/*.tga
+**/*.tif
+**/*.tiff
+**/*.unity
+**/*.unityproj
+**/*.user
+**/*.userprefs
+**/*.wav
