@@ -104,6 +104,19 @@ namespace FrogJump.Mechanics
       Platform platform = gameObject.GetComponent<Platform>();
       if (!collisionByInstanceId.ContainsKey(platform.UniqueId))
       {
+        var random = UnityEngine.Random.Range(0, 3);
+        switch (random)
+        {
+          case 0:
+            platform.MovingDirection = Movement.HORIZONTAL;
+            break;
+          case 1:
+            platform.MovingDirection = Movement.VERTICAL;
+            break;
+          case 2:
+            platform.MovingDirection = Movement.NONE;
+            break;
+        }
         collisionByInstanceId.Add(platform.UniqueId, false);
       }
       platforms.Add(++platformCount, gameObject);
