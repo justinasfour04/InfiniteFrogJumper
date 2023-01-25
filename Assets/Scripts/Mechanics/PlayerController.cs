@@ -50,13 +50,24 @@ namespace FrogJump.Mechanics
       movementX = movementVector.x;
     }
 
-    private void OnTouch(InputValue touch)
+    private void OnTouchDrag(InputValue touch)
     {
       Vector2 touchDelta = touch.Get<Vector2>();
-      movementX = touchDelta.x > 0 ? -1 : 1;
+      if (touchDelta.x == 0)
+      {
+        movementX = 0;
+      }
+      else if (touchDelta.x > 0)
+      {
+        movementX = 1;
+      }
+      else
+      {
+        movementX = -1;
+      }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
       if (playerInput.currentControlScheme == "Touch")
       {
