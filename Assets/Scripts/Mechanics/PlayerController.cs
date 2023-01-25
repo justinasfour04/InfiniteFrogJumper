@@ -1,8 +1,8 @@
 using FrogJump.Core;
 using FrogJump.Model;
 using System;
-using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace FrogJump.Mechanics
@@ -16,9 +16,13 @@ namespace FrogJump.Mechanics
     private PlatformController platformController;
     private GameModel model = Util.GetModel<GameModel>();
     private UIManager uiManager;
+    private Camera mainCamera;
     [SerializeField] private LayerMask ground;
-    private float maxSpeed = 5;
+    [SerializeField] private float maxVelocity = 5f;
+    private float maxTouchVelocity = 8f;
     [SerializeField] private float jumpForce;
+    private float movementX;
+    private PlayerInput playerInput;
 
     private void Awake()
     {
@@ -28,6 +32,10 @@ namespace FrogJump.Mechanics
       boxCollider2d = GetComponent<BoxCollider2D>();
       uiManager = GetComponent<UIManager>();
       platformController = GameObject.FindGameObjectWithTag("Grid").GetComponent<PlatformController>();
+
+      mainCamera = Camera.main;
+
+      playerInput = FindObjectOfType<PlayerInput>();      
     }
 
     void Start()
@@ -36,28 +44,27 @@ namespace FrogJump.Mechanics
       transform.position = new Vector2(Screen.safeArea.xMin, Screen.safeArea.yMin + 2);
     }
 
-    private void Update()
+    private void OnMove(InputValue movementValue)
     {
-      float dirX = 0;
-      if (Input.touchSupported)
+      Vector2 movementVector = movementValue.Get<Vector2>();
+      movementX = movementVector.x;
+    }
+
+    private void OnTouch(InputValue touch)
+    {
+      Vector2 touchDelta = touch.Get<Vector2>();
+      movementX = touchDelta.x > 0 ? -1 : 1;
+    }
+
+    private void FixedUpdate()
+    {
+      if (playerInput.currentControlScheme == "Touch")
       {
-        Touch singleFingerTouch = Input.touches[0];
-        switch (singleFingerTouch.phase)
-        {
-          case TouchPhase.Moved:
-            {
-              var delta = singleFingerTouch.deltaPosition;
-              dirX = delta.x > 0 ? -1 : 1;
-              maxSpeed = 10;
-              rb.velocity = new Vector2(maxSpeed * dirX, rb.velocity.y);
-              break;
-            }
-        }
+        rb.velocity = new Vector2(movementX * maxTouchVelocity, rb.velocity.y);
       }
       else
       {
-        dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(maxSpeed * dirX, rb.velocity.y);
+        rb.velocity = new Vector2(movementX * maxVelocity, rb.velocity.y);
       }
 
       var grounded = isGrounded();
@@ -70,7 +77,7 @@ namespace FrogJump.Mechanics
 
       KeepPlayerCentered();
       ReturnFromBorders();
-      UpdateAnimation(dirX, grounded);
+      UpdateAnimation(movementX, grounded);
 
       if (transform.position.y < model.CameraBounds.yMin)
       {
