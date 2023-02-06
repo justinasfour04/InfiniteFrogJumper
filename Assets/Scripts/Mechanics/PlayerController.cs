@@ -13,6 +13,7 @@ namespace FrogJump.Mechanics
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider2d;
     private Animator animator;
+    private AudioSource jumpSound;
     private PlatformController platformController;
     private GameModel model = Util.GetModel<GameModel>();
     private UIManager uiManager;
@@ -31,6 +32,7 @@ namespace FrogJump.Mechanics
       animator = GetComponent<Animator>();
       boxCollider2d = GetComponent<BoxCollider2D>();
       uiManager = GetComponent<UIManager>();
+      jumpSound = GetComponent<AudioSource>();
       platformController = GameObject.FindGameObjectWithTag("Grid").GetComponent<PlatformController>();
 
       mainCamera = Camera.main;
@@ -83,6 +85,7 @@ namespace FrogJump.Mechanics
       // Jump off ground
       if (grounded && rb.velocity.y <= 0)
       {
+        jumpSound.Play();
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
       }
 
@@ -93,6 +96,12 @@ namespace FrogJump.Mechanics
       if (transform.position.y < model.CameraBounds.yMin)
       {
         SceneManager.LoadScene(0);
+        var highscore = PlayerPrefs.GetInt("highscore");
+        var score = uiManager.getScore();
+        if (highscore < score)
+        {
+          PlayerPrefs.SetInt("highscore", uiManager.getScore());
+        }
       }
     }
 
